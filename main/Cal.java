@@ -2,6 +2,7 @@ package main;
 
 import symbol.*;
 import inter.*;
+import java.io.*;
 
 // expr -> unary opE
 // unary -> - num | num
@@ -15,22 +16,35 @@ import inter.*;
 class Cal {
     private Scanner scanner;
     private Token look;
+    static FileOutputStream fos = null;
+   
+    public static void main(String args[]) throws IOException {
+	String inputFile = new java.util.Scanner(System.in).next();
+    	FileInputStream fis = null;
+        fos = new FileOutputStream("output.asm");
 
-    public static void main(String args[]) {
-        Scanner s = new Scanner();
+	try {
+	    fis = new FileInputStream(inputFile);
+	} catch(FileNotFoundException e) {
+	    e.printStackTrace();
+	}
+
+	Scanner s = new Scanner(fis);
+		
         Cal c = new Cal(s);
         Expr e = c.expr();
-
+        
         // Code generation.
-        Stmt stmt = new Stmt(e);
+        Stmt stmt = new Stmt(e, fos);
         stmt.gen();
+        System.out.println("check result : output.asm");
     }
 
     Cal(Scanner s) {
         scanner = s;
     }
 
-    Expr expr() {
+    Expr expr() throws IOException {
         Expr expr = null;
         next();
         switch(look.getType()) {
@@ -48,7 +62,7 @@ class Cal {
         return expr;
     }
 
-    Expr opE(Expr expr1) {
+    Expr opE(Expr expr1) throws IOException   {
         Expr expr = null;
         switch(look.getType()) {
         case Type.ADD:
@@ -63,7 +77,7 @@ class Cal {
             Expr expr2 = num();
 
             // Build AST node.
-            expr = new ExprArith(op, expr1, expr2);
+            expr = new ExprArith(op, expr1, expr2, fos);
 
             // + num [Es] opE | - num [Es] opE
             boolean cal = false;
@@ -81,12 +95,12 @@ class Cal {
         return expr;
     }
 
-    Expr Es(Expr expr, boolean cal) {
+    Expr Es(Expr expr, boolean cal) throws IOException {
         switch(look.getType()) {
         case Type.EQ:
             if(cal) {
                 // Build AST node.
-                expr = new ExprArith(expr.op, expr, expr.expr2);
+                expr = new ExprArith(expr.op, expr, expr.expr2, fos);
             } else {
                 cal = true;
             }
@@ -109,7 +123,7 @@ class Cal {
         return expr;
     }
 
-    Expr unary() {
+    Expr unary() throws IOException {
         Expr expr = null;
         switch(look.getType()) {
         case Type.SUB:
@@ -131,11 +145,11 @@ class Cal {
         return expr;
     }
 
-    Expr num() {
+    Expr num() throws IOException {
         Expr expr = null;
         switch(look.getType()) {
         case Type.NUM:
-            expr = new ExprNum(look);
+            expr = new ExprNum(look, fos);
             next();
             break;
         default:
@@ -144,7 +158,7 @@ class Cal {
         return expr;
     }
 
-    void next() {
+    void next() throws IOException {
         look = scanner.scan();
     }
 

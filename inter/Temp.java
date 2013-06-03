@@ -5,7 +5,7 @@ class Temp extends Expr {
     int id;
 
     Temp() {
-        super(null, null, null);
+        super(null, null, null, null);
         count++;
         id = count;
     }

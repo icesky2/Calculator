@@ -1,19 +1,31 @@
 package main;
 
 import symbol.*;
-
+import java.io.*;
 class Scanner {
     char look = ' ';
+    public FileInputStream source;
 
-    void read() {
-        try {
+    public Scanner(FileInputStream source) {
+        this.source = source;
+    }
+
+    void read() throws IOException {
+        /*try {
             look = (char) System.in.read();
         } catch(Exception e) {
             e.printStackTrace();
-        }
+        }*/
+	
+    	int buffer = source.read();
+    	if(buffer != -1) {
+    		look = (char)buffer;
+    	} else {
+    		source.close();
+    	}
     }
 
-    Token scan() {
+    Token scan() throws IOException  {
         while(look == ' ' || look == '\t' || look == '\n') {
             read();
         }

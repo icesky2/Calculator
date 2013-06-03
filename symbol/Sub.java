@@ -12,6 +12,6 @@ public class Sub extends Token {
     }
 
     public String toString() {
-        return "+";
+        return "-";
     }
 }

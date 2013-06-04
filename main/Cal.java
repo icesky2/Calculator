@@ -19,7 +19,14 @@ class Cal {
     static FileOutputStream fos = null;
    
     public static void main(String args[]) throws IOException {
-	String inputFile = new java.util.Scanner(System.in).next();
+	String inputFile = "";
+	int index = 0;
+	while(index < args.length - 1) {
+	    inputFile += args[index];
+	    index++;
+	}
+	
+	System.out.println("Your Arith File: " + inputFile);
     	FileInputStream fis = null;
         fos = new FileOutputStream("output.asm");
 
@@ -67,7 +74,8 @@ class Cal {
         switch(look.getType()) {
         case Type.ADD:
         case Type.SUB:
-            System.out.println("cal : " + expr1.getResult());
+            //System.out.println("cal : " + expr1.getResult());
+	    fos.write(("cal : " + expr1.getResult() + "\n").getBytes());
 
             // [+] num Es opE | [-] num Es opE
             Token op = look;
@@ -105,7 +113,8 @@ class Cal {
                 cal = true;
             }
 
-            System.out.println(expr.getResult());
+            //System.out.println(expr.getResult());
+	    fos.write(("" + expr.getResult()).getBytes());
 
             // Es -> [=] Es | epsilon
             next();

@@ -7,7 +7,9 @@ import java.io.*;
 // expr -> unary opE
 // unary -> - num | num
 // opE -> + num Es opE |
-//        - num Es opE
+//        - num Es opE |
+//        * num Es opE |
+//        / num Es opE |
 // (opE : operator with expression)
 //
 // Es -> = Es | epsilon
@@ -19,16 +21,9 @@ class Cal {
     static FileOutputStream fos = null;
    
     public static void main(String args[]) throws IOException {
-	String inputFile = "";
-	int index = 0;
-	while(index < args.length - 1) {
-	    inputFile += args[index];
-	    index++;
-	}
-	
-	System.out.println("Your Arith File: " + inputFile);
+	String inputFile = args[0];
+        fos = new FileOutputStream(args[2]);
     	FileInputStream fis = null;
-        fos = new FileOutputStream("output.asm");
 
 	try {
 	    fis = new FileInputStream(inputFile);
@@ -44,7 +39,6 @@ class Cal {
         // Code generation.
         Stmt stmt = new Stmt(e, fos);
         stmt.gen();
-        System.out.println("check result : output.asm");
     }
 
     Cal(Scanner s) {
@@ -74,8 +68,10 @@ class Cal {
         switch(look.getType()) {
         case Type.ADD:
         case Type.SUB:
+	case Type.MUL:
+	case Type.DIV:
             //System.out.println("cal : " + expr1.getResult());
-	    fos.write(("cal : " + expr1.getResult() + "\n").getBytes());
+	    //fos.write(("cal : " + expr1.getResult() + "\n").getBytes());
 
             // [+] num Es opE | [-] num Es opE
             Token op = look;
@@ -114,7 +110,7 @@ class Cal {
             }
 
             //System.out.println(expr.getResult());
-	    fos.write(("" + expr.getResult()).getBytes());
+	    //fos.write(("" + expr.getResult()).getBytes());
 
             // Es -> [=] Es | epsilon
             next();
@@ -124,6 +120,8 @@ class Cal {
             break;
         case Type.ADD:
         case Type.SUB:
+	case Type.MUL:
+	case Type.DIV:
         case Type.EOF:
             break;
         default:

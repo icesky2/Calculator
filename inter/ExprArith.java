@@ -16,8 +16,9 @@ public class ExprArith extends Expr {
     Expr reduce() {
         Expr e = gen();
         Temp t = new Temp();
+
         try {
-	     emit(t.toString() + " = " + e.toString());
+	     emit(t.toString() + " = " + e.toString() + "\t// " + t.toString() + " = " + getResult());
         } catch (IOException e1) {
 	     e1.printStackTrace();
 	}

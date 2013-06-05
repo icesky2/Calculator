@@ -15,11 +15,12 @@ public class Stmt {
     public void gen() throws IOException {
         Expr e = expr.gen();
         Temp t = new Temp();
-        emit(t.toString() + " = " + e.toString());
+        emit(t.toString() + " = " + e.toString() + "\t// " + t.toString() + " = ");
+	fos.write(("" + expr.getResult()).getBytes());
     }
 
     void emit(String s) throws IOException {
         //System.out.println("\t" + s);
-    	fos.write(("\t" + s + "\n").getBytes());
+    	fos.write(("\t" + s).getBytes());
     }
 }

@@ -51,7 +51,7 @@ class Cal {
 	case Type.SUB:
         case Type.NUM:
             // expr ->[term] termlist
-            Expr expr1 = unary();
+            Expr expr1 = term();
 
             // expr -> term [termlist]
             expr = termlist(expr1);
@@ -180,7 +180,7 @@ class Cal {
         return expr;
     }
 
-    Expr unary() throws IOException {
+    /*Expr unary() throws IOException {
         Expr expr = null;
         switch(look.getType()) {
         case Type.SUB:
@@ -200,7 +200,7 @@ class Cal {
             syntaxError("unary");
         }
         return expr;
-    }
+    }*/
 
     Expr num() throws IOException {
         Expr expr = null;

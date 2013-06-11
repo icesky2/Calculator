@@ -4,13 +4,14 @@ import symbol.*;
 import inter.*;
 import java.io.*;
 
-// expr -> term termlist
-// termlist -> + term Es termlist |
-//		      - term Es termlist 
-// term ->  factor factorist |        
-// factorist -> 	* factor factorist |
-//               	/ factor factorist |
-// factor -> num
+// expr -> unary opE
+// unary -> - num | num
+// opE -> + mulDiv Es opE|
+//              - mulDiv Es opE |
+// mulDiv -> num * num Es opE |
+//        	     num /  num Es opE | 	
+// (opE : operator with expression)
+//
 // Es -> = Es | epsilon
 // (Es : expressions)
 
@@ -48,13 +49,13 @@ class Cal {
         Expr expr = null;
         next();
         switch(look.getType()) {
-	case Type.SUB:
+        case Type.SUB:
         case Type.NUM:
-            // expr ->[term] termlist
+            // expr -> [unary] opE
             Expr expr1 = unary();
 
-            // expr -> term [termlist]
-            expr = termlist(expr1);
+            // expr -> unary [opE]
+            expr = opE(expr1);
             break;
         default:
             syntaxError("expr");
@@ -62,7 +63,7 @@ class Cal {
         return expr;
     }
 
-    Expr termlist(Expr expr1) throws IOException   {
+    Expr opE(Expr expr1) throws IOException   {
         Expr expr = null;
         switch(look.getType()) {
   	case Type.ADD:
@@ -70,81 +71,68 @@ class Cal {
             //System.out.println("cal : " + expr1.getResult());
 	    //fos.write(("cal : " + expr1.getResult() + "\n").getBytes());
 
-            // [+] term termlist Es | [-] term termlist Es
+            // [+] num mulDiv Es opE | [-] num mulDiv Es opE
             Token op = look;
 	    next();
-   
-            // + [term] termlist Es | - [term] termlist Es
-            Expr expr2 = term();
+
+            // + [num] mulDiv Es opE | - [num] mulDiv Es opE
+            Expr expr2 = mulDiv(expr1);
 
             // Build AST node.
             expr = new ExprArith(op, expr1, expr2, fos);
-	
-            //+ term [Es] termlist| - term [Es] termlist 
+			
+            // + num mulDiv [Es] opE | - num mulDiv [Es] opE
             boolean cal = false;
             expr = Es(expr, cal);
 
-	    // + term Es [termlist] | - term Es [termlist] 
- 	    expr = termlist(expr);
+            // + num mulDiv  Es [opE] | - num mulDiv  Es [opE]
+            expr = opE(expr);
             break;
 	case Type.MUL:
         case Type.DIV:
-	case Type.EQ:
         case Type.EOF:
             expr = expr1;
             break;
         default:
-            syntaxError("termlist");
+            syntaxError("opE");
         }
         return expr;
     }
 
-    Expr term() throws IOException   {
-	Expr expr = null;
-	switch(look.getType()) {
-	case Type.NUM:
-	    Expr expr1 = num();
-	    expr = factorlist(expr1);
-	    break;
-	default:
-	    syntaxError("term");
-        }
-        return expr;
-    }
-
-    Expr factorlist(Expr expr1) throws IOException   {
+    Expr mulDiv(Expr expr1) throws IOException   {
         Expr expr = null;
+	Expr expr3 = num();
+	//next();
         switch(look.getType()) {
 	case Type.MUL:
 	case Type.DIV:
             //System.out.println("cal : " + expr1.getResult());
 	    //fos.write(("cal : " + expr1.getResult() + "\n").getBytes());
 
-            // [*] factor factorist | [/] factor factorist
+            // [*] num Es opE | [/] num Es opE
             Token op = look;
             next();
 
-            // * [factor] factorist | / [factor] factorist
+            // * [num] Es opE | / [num] Es opE
             Expr expr2 = num();
 
             // Build AST node.
-            expr = new ExprArith(op, expr1, expr2, fos);
+            expr = new ExprArith(op, expr3, expr2, fos);
 
-            // * factor [Es] factorist | / factor [Es] factorist
+           // * num [Es] opE | / num [Es] opE
             boolean cal = false;
             expr = Es(expr, cal);
 
-	    // * factor Es [factorist] | / factor Es [factorist]*/
-	    expr = factorlist(expr);
+            // * num Es [opE] | / num Es [opE]
+            expr = opE(expr);
             break;
  	case Type.ADD:
         case Type.SUB:
-	case Type.EQ:
         case Type.EOF:
             expr = expr1;
             break;
         default:
-            syntaxError("factorlist");
+            syntaxError("mulDiv");
         }
         return expr;
     }

@@ -21,6 +21,6 @@ public class Stmt {
 
     void emit(String s) throws IOException {
         //System.out.println("\t" + s);
-    	fos.write(("\t" + s).getBytes());
+    	fos.write(("          " + s).getBytes());
     }
 }

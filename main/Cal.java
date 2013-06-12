@@ -6,11 +6,11 @@ import java.io.*;
 
 // expr -> term termlist
 // termlist -> + term Es termlist |
-//		      - term Es termlist 
+//	       - term Es termlist 
 // term ->  factor factorist |        
-// factorist -> 	* factor factorist |
-//               	/ factor factorist |
-// factor -> num
+// factorist -> * factor Es factorist |
+//              / factor Es factorist |
+// fator -> num | (expr)
 // Es -> = Es | epsilon
 // (Es : expressions)
 
@@ -89,6 +89,8 @@ class Cal {
             break;
 	case Type.MUL:
         case Type.DIV:
+	case Type.LPR:
+	case Type.RPR:
 	case Type.EQ:
         case Type.EOF:
             expr = expr1;
@@ -125,7 +127,7 @@ class Cal {
             next();
 
             // * [factor] factorist | / [factor] factorist
-            Expr expr2 = num();
+            Expr expr2 = factor();
 
             // Build AST node.
             expr = new ExprArith(op, expr1, expr2, fos);
@@ -139,12 +141,33 @@ class Cal {
             break;
  	case Type.ADD:
         case Type.SUB:
+	case Type.LPR:
+	case Type.RPR:
 	case Type.EQ:
         case Type.EOF:
             expr = expr1;
             break;
         default:
             syntaxError("factorlist");
+        }
+        return expr;
+    }
+
+    Expr factor() throws IOException {
+	Expr expr = null;	
+	switch(look.getType()) {
+	case Type.NUM:
+		expr = num();
+		break;
+	case Type.LPR:
+	    	expr = expr();
+	    	next();
+	    	if(look.getType() == Type.RPR) {
+		   	 break;
+	    	}
+	break;
+	default:
+            syntaxError("factor");
         }
         return expr;
     }
@@ -158,7 +181,7 @@ class Cal {
             } else {
                 cal = true;
             }
-
+ 
             //System.out.println(expr.getResult());
 	    //fos.write(("" + expr.getResult()).getBytes());
 
@@ -172,6 +195,8 @@ class Cal {
         case Type.SUB:
 	case Type.MUL:
 	case Type.DIV:
+	case Type.LPR:
+	case Type.RPR:
         case Type.EOF:
             break;
         default:
@@ -179,28 +204,6 @@ class Cal {
         }
         return expr;
     }
-
-    /*Expr unary() throws IOException {
-        Expr expr = null;
-        switch(look.getType()) {
-        case Type.SUB:
-            // unary -> [-] num | num
-            next();
-
-            // unary -> - [num] | num
-            expr = num();
-
-            expr.setResult(-expr.getResult());
-            break;
-        case Type.NUM:
-            // unary -> - num | [num]
-            expr = num();
-            break;
-        default:
-            syntaxError("unary");
-        }
-        return expr;
-    }*/
 
     Expr num() throws IOException {
         Expr expr = null;

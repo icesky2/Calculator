@@ -40,6 +40,6 @@ public class Expr {
 
     void emit(String s) throws IOException {
         //System.out.println("\t" + s);
-    	fos.write(("\t" + s + "\n").getBytes());
+    	fos.write(("          " + s + "\n").getBytes());
     }
 }

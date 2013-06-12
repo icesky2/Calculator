@@ -48,12 +48,18 @@ class Scanner {
         case '-':
             tok = new Sub();
             break;
-		case '*':
-			tok = new Mul();
-			break;
-		case '/':
-			tok = new Div();
-			break;
+	case '*':
+	    tok = new Mul();
+	    break;
+	case '/':
+	    tok = new Div();
+	    break;
+	case '(':
+	    tok = new Token(Type.LPR);
+	    break;
+	case ')':
+	    tok = new Token(Type.RPR);
+	    break;
         case '=':
             tok = new Token(Type.EQ);
             break;

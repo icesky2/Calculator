@@ -18,6 +18,7 @@ class Cal {
     private Scanner scanner;
     private Token look;
     static FileOutputStream fos = null;
+    static String assign = "";
    
     public static void main(String args[]) throws IOException {
 	String inputFile = args[0];
@@ -37,17 +38,37 @@ class Cal {
         
         // Code generation.
         Stmt stmt = new Stmt(e, fos);
-        stmt.gen();
+	int begin = stmt.newLabel();
+        int after = stmt.newLabel();
+        stmt.emitLabel(begin);
+        stmt.gen(assign, begin, after);
+        stmt.emitLabel(after);
     }
 
     Cal(Scanner s) {
         scanner = s;
     }
 
+    /*Stmt stmts(FileOutputStream fos) throws IOException {
+        if (look.getType() != '$') {
+            return new Seq(Stmt(expr(), fos), stmts(fos));
+        } 
+	return  Stmt.Null;
+    }*/
+
     Expr expr() throws IOException {
         Expr expr = null;
         next();
         switch(look.getType()) {
+	case Type.WORD:
+	    assign += look.toString();
+	    next();
+	    if(look.getType() == Type.EQ) {
+		expr = expr();
+	   } else {
+		break;
+	   }
+	break;
 	case Type.SUB:
         case Type.NUM:
             // expr ->[term] termlist
@@ -93,6 +114,7 @@ class Cal {
 	case Type.RPR:
 	case Type.EQ:
         case Type.EOF:
+	case Type.WORD:
             expr = expr1;
             break;
         default:
@@ -145,6 +167,7 @@ class Cal {
 	case Type.RPR:
 	case Type.EQ:
         case Type.EOF:
+	case Type.WORD:
             expr = expr1;
             break;
         default:
@@ -157,14 +180,14 @@ class Cal {
 	Expr expr = null;	
 	switch(look.getType()) {
 	case Type.NUM:
-		expr = num();
-		break;
+	    expr = num();
+	    break;
 	case Type.LPR:
-	    	expr = expr();
-	    	next();
-	    	if(look.getType() == Type.RPR) {
-		   	 break;
-	    	}
+	    expr = expr();
+	    next();
+	    if(look.getType() == Type.RPR) {
+		break;
+	    }
 	break;
 	default:
             syntaxError("factor");
@@ -198,6 +221,7 @@ class Cal {
 	case Type.LPR:
 	case Type.RPR:
         case Type.EOF:
+	case Type.WORD:
             break;
         default:
             syntaxError("Es");

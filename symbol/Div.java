@@ -12,6 +12,6 @@ public class Div extends Token {
     }
 
     public String toString() {
-        return "/";
+        return "div";
     }
 }

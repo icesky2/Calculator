@@ -12,6 +12,6 @@ public class Mul extends Token {
     }
 
     public String toString() {
-        return "*";
+        return "mul";
     }
 }

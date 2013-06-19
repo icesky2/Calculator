@@ -12,6 +12,6 @@ public class Add extends Token {
     }
 
     public String toString() {
-        return "+";
+        return "add";
     }
 }

@@ -10,7 +10,7 @@ public class Expr {
     public Expr expr1, expr2;
     private int result;
     FileOutputStream fos = null;
-
+    
     public Expr(Token op, Expr expr1, Expr expr2, FileOutputStream fos) {
         this.op = op;
         this.expr1 = expr1;
@@ -35,11 +35,26 @@ public class Expr {
     }
 
     public String toString() {
-        return expr1.toString() + " " + op.toString() + " " + expr2.toString();
+        return op.toString() + "  " + "  " +expr1.toString() +" , " + expr2.toString();
+    }
+
+    public String opToString() {
+	return op.toString();
+    }
+
+    public String exprToString() {
+        return expr1.toString() +" , " + expr2.toString();
+    }
+
+    public void jumping(int t, int f) {
+        emitjumps(t, f);
+    }
+
+    public void emitjumps(int t, int f) { // nothing since both t and f fall through
     }
 
     void emit(String s) throws IOException {
         //System.out.println("\t" + s);
-    	fos.write(("          " + s + "\n").getBytes());
+    	fos.write((s + "\n").getBytes());
     }
 }

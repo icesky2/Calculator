@@ -1,4 +1,11 @@
-          t1 = 4 - 5	// t1 = -1
-          t2 = 3 * t1	// t2 = -3
-          t3 = t2 + 6	// t3 = 3
-          t4 = 2 * t3	// t4 = 6
+
+L1:
+sub  eax  4 , 5
+mul  ebx  3 , eax
+add  ecx  ebx , 6
+mul  edx  2 , ecx
+sub  eex  4 , 5
+mul  efx  3 , eex
+add  egx  efx , 6
+mul  testa  edx , egx
+L2:

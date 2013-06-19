@@ -2,9 +2,10 @@ package main;
 
 import symbol.*;
 import java.io.*;
-class Scanner {
+public class Scanner {
     char look = ' ';
     public FileInputStream source;
+    public static int line = 1;
 
     public Scanner(FileInputStream source) {
         this.source = source;
@@ -26,9 +27,14 @@ class Scanner {
     }
 
     Token scan() throws IOException  {
-        while(look == ' ' || look == '\t' || look == '\n') {
+        while(look == ' ' || look == '\t') {
             read();
         }
+
+	while (look == '\n') {
+	    line = line + 1;
+	    read();
+	}
 
         if(Character.isDigit(look)) {
             int num = 0;
@@ -39,6 +45,16 @@ class Scanner {
             } while(Character.isDigit(look));
             return new Num(num);
         }
+
+	if(Character.isLetter(look)){
+	    StringBuffer b = new StringBuffer();
+	    do {
+		b.append(look);
+		read();
+	    } while(Character.isLetterOrDigit(look));
+	    String s = b.toString();
+	    return new Word(s);
+	}
 
         Token tok = null;
         switch(look) {

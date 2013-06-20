@@ -31,9 +31,10 @@ public class Stmt {
 
     public void gen(String s, int b, int a) throws IOException {
         Expr e = expr.gen();
-        //Temp t = new Temp();
-
-        emit(e.opToString() + "  " + s + "  " + e.exprToString());
+        Temp t = new Temp();
+        
+        emit(e.opToString() + "  " + e.expr1ToString() + " , " + e.expr2ToString());
+	emit("\r\nmov  " + s + " , " +  t.toString() );
 	//fos.write(("" + expr.getResult()).getBytes());
     }
 

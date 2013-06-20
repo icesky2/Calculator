@@ -41,7 +41,6 @@ class Cal {
         Stmt stmt = new Stmt(e, fos);
 	int begin = stmt.newLabel();
         int after = stmt.newLabel();
-        stmt.emitLabel(begin);
         stmt.gen(assign, begin, after);
         
     }

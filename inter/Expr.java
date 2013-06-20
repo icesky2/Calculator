@@ -46,6 +46,14 @@ public class Expr {
         return expr1.toString() +" , " + expr2.toString();
     }
 
+    public String expr1ToString() {
+        return expr1.toString();
+    }
+
+    public String expr2ToString() {
+        return expr2.toString();
+    }
+
     public void jumping(int t, int f) {
         emitjumps(t, f);
     }

@@ -18,7 +18,8 @@ public class ExprArith extends Expr {
         Temp t = new Temp();
 
         try {
-	     emit(e.opToString() + "  " + t.toString() + "  " + e.exprToString()); 
+	     emit("mov  " + t.toString() + " , " + e.expr1ToString());
+	     emit(e.opToString() + "  " + t.toString() + " , " + e.expr2ToString()); 
         } catch (IOException e1) {
 	     e1.printStackTrace();
 	}

@@ -1,10 +1,16 @@
-
-L1:
-sub  eax  4 , 5
-mul  ebx  3 , eax
-add  ecx  ebx , 6
-mul  edx  2 , ecx
-sub  eex  4 , 5
-mul  efx  3 , eex
-add  egx  efx , 6
-mul  testa  edx , egx
+mov  eax , 4
+sub  eax , 5
+mov  ebx , 3
+mul  ebx , eax
+mov  ecx , ebx
+add  ecx , 6
+mov  edx , 2
+mul  edx , ecx
+mov  eex , 4
+sub  eex , 5
+mov  efx , 3
+mul  efx , eex
+mov  egx , efx
+add  egx , 6
+mul  edx , egx
+mov  testa , ehx

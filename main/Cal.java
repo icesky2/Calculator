@@ -1,10 +1,11 @@
+//You can "git clone https://github.com/icesky2/Calculator.git" on cmd for windows or terminal for Linux
 package main;
 
 import symbol.*;
 import inter.*;
 import java.io.*;
 
-// expr -> term termlist
+// expr -> word term termlist | term termlist
 // termlist -> + term Es termlist |
 //	       - term Es termlist 
 // term ->  factor factorist |        
@@ -42,7 +43,7 @@ class Cal {
         int after = stmt.newLabel();
         stmt.emitLabel(begin);
         stmt.gen(assign, begin, after);
-        stmt.emitLabel(after);
+        
     }
 
     Cal(Scanner s) {

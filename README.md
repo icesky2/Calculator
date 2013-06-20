@@ -12,14 +12,18 @@
 
     Example:
 
-	 input.exp:20+8+7+42*5+4=$
+	 input.exp:testa=2*(3*(4-5)+6)==$
 
 	 output.asm:
-		t1 = 20 + 8	// t1 = 28
-		t2 = t1 + 7	// t2 = 35
-		t3 = 42 * 5	// t3 = 210
-		t4 = t2 + t3	// t4 = 245
-		t5 = t4 + 4	// t5 = 249
+	L1:
+	sub  eax  4 , 5
+	mul  ebx  3 , eax
+	add  ecx  ebx , 6
+	mul  edx  2 , ecx
+	sub  eex  4 , 5
+	mul  efx  3 , eex
+	add  egx  efx , 6
+	mul  testa  edx , egx
 
 ### Installation
 
